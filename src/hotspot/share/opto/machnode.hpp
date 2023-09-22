@@ -144,6 +144,15 @@ public:
   }
 #endif
 
+#if defined(S390)
+  VectorRegister as_VectorRegister(PhaseRegAlloc *ra_, const Node *node) const {
+    return ::as_VectorRegister(reg(ra_, node));
+  }
+  VectorRegister as_VectorRegister(PhaseRegAlloc *ra_, const Node *node, int idx) const {
+    return ::as_VectorRegister(reg(ra_, node, idx));
+ }
+#endif
+
   virtual intptr_t  constant() const;
   virtual relocInfo::relocType constant_reloc() const;
   virtual jdouble constantD() const;

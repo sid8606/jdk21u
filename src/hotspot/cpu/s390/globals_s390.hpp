@@ -108,6 +108,9 @@ define_pd_global(intx, InitArrayShortSize, 1*BytesPerLong);
   /* Seems to pay off with 2 pages already. */                                \
   product(size_t, MVCLEThreshold, +2*(4*K), DIAGNOSTIC,                       \
           "Threshold above which page-aligned MVCLE copy/init is used.")      \
+  /* special instructions */                                                  \
+  product(bool, SuperwordUseVSX, false,                                       \
+          "Use Z15 Vector instructions for superword optimization.")          \
                                                                               \
   product(bool, PreferLAoverADD, false, DIAGNOSTIC,                           \
           "Use LA/LAY instructions over ADD instructions (z/Architecture).")  \

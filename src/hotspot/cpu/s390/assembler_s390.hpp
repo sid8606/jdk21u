@@ -1237,6 +1237,9 @@ class Assembler : public AbstractAssembler {
 // NOR
 #define VNO_ZOPC    (unsigned long)(0xe7L << 40 | 0x6bL << 0)   // V1 := !(V2 | V3),  element size = 2**m
 
+ //NOT-XOR
+#define VNX_ZOPC    (unsigned long)(0xe7L << 40 | 0x6cL << 0)   // V1 := !(V2 | V3),  element size = 2**m
+
 // OR
 #define VO_ZOPC     (unsigned long)(0xe7L << 40 | 0x6aL << 0)   // V1 := V2 | V3,  element size = 2**m
 
@@ -1287,6 +1290,8 @@ class Assembler : public AbstractAssembler {
 #define VFENE_ZOPC  (unsigned long)(0xe7L << 40 | 0x81L << 0)   // Find element not equal
 #define VSTRC_ZOPC  (unsigned long)(0xe7L << 40 | 0x8aL << 0)   // String range compare
 #define VISTR_ZOPC  (unsigned long)(0xe7L << 40 | 0x5cL << 0)   // Isolate String
+
+#define VFA_ZOPC   (unsigned long)(0xe7L << 40 | 0xE3L << 0)
 
 
 //--------------------------------
@@ -2484,6 +2489,7 @@ class Assembler : public AbstractAssembler {
   inline void z_vleh(  VectorRegister v1, int64_t d2, Register x2, Register b2, int64_t m3);
   inline void z_vlef(  VectorRegister v1, int64_t d2, Register x2, Register b2, int64_t m3);
   inline void z_vleg(  VectorRegister v1, int64_t d2, Register x2, Register b2, int64_t m3);
+  inline void z_vl(VectorRegister v1, const Address& a);
 
   // Gather/Scatter
   inline void z_vgef(  VectorRegister v1, int64_t d2, VectorRegister vx2, Register b2, int64_t m3);
@@ -2518,10 +2524,10 @@ class Assembler : public AbstractAssembler {
   inline void z_vlgvg( Register r1, VectorRegister v3, int64_t d2, Register b2);
 
   inline void z_vlvg(  VectorRegister v1, Register r3, int64_t d2, Register b2, int64_t m4);
-  inline void z_vlvgb( VectorRegister v1, Register r3, int64_t d2, Register b2);
-  inline void z_vlvgh( VectorRegister v1, Register r3, int64_t d2, Register b2);
-  inline void z_vlvgf( VectorRegister v1, Register r3, int64_t d2, Register b2);
-  inline void z_vlvgg( VectorRegister v1, Register r3, int64_t d2, Register b2);
+  inline void z_vlvgb( VectorRegister v1, Register r3, int64_t d2, Register b2=Z_R0);
+  inline void z_vlvgh( VectorRegister v1, Register r3, int64_t d2, Register b2=Z_R0);
+  inline void z_vlvgf( VectorRegister v1, Register r3, int64_t d2, Register b2=Z_R0);
+  inline void z_vlvgg( VectorRegister v1, Register r3, int64_t d2, Register b2=Z_R0);
 
   inline void z_vlvgp( VectorRegister v1, Register r2, Register r3);
 
@@ -2613,6 +2619,7 @@ class Assembler : public AbstractAssembler {
   inline void z_vstef( VectorRegister v1, int64_t d2, Register x2, Register b2, int64_t m3);
   inline void z_vsteg( VectorRegister v1, int64_t d2, Register x2, Register b2, int64_t m3);
   inline void z_vstl(  VectorRegister v1, Register r3, int64_t d2, Register b2);
+  inline void z_vst(VectorRegister v1, const Address& a);
 
   // Misc
   inline void z_vgm(   VectorRegister v1, int64_t imm2, int64_t imm3, int64_t m4);
@@ -2732,6 +2739,9 @@ class Assembler : public AbstractAssembler {
 
   // NOR
   inline void z_vno(    VectorRegister v1, VectorRegister v2, VectorRegister v3);
+
+  //NOT-XOR
+  inline void z_vnx(    VectorRegister v1, VectorRegister v2, VectorRegister v3);
 
   // OR
   inline void z_vo(     VectorRegister v1, VectorRegister v2, VectorRegister v3);
@@ -2885,6 +2895,8 @@ class Assembler : public AbstractAssembler {
   inline void z_vistrbs(VectorRegister v1, VectorRegister v2);
   inline void z_vistrhs(VectorRegister v1, VectorRegister v2);
   inline void z_vistrfs(VectorRegister v1, VectorRegister v2);
+  inline void z_vfa(VectorRegister v1, VectorRegister v2, VectorRegister v3, int64_t m4);
+  inline void z_vfadb(VectorRegister v1, VectorRegister v2, VectorRegister v3);
 
 
   // Floatingpoint instructions

@@ -778,6 +778,7 @@ inline void Assembler::z_vleb(   VectorRegister v1, int64_t d2, Register x2, Reg
 inline void Assembler::z_vleh(   VectorRegister v1, int64_t d2, Register x2, Register b2, int64_t ix3){emit_48(VLEH_ZOPC  | vreg(v1,  8)                        | rxmask_48(d2, x2, b2) | uimm4(ix3, 32, 48)); }
 inline void Assembler::z_vlef(   VectorRegister v1, int64_t d2, Register x2, Register b2, int64_t ix3){emit_48(VLEF_ZOPC  | vreg(v1,  8)                        | rxmask_48(d2, x2, b2) | uimm4(ix3, 32, 48)); }
 inline void Assembler::z_vleg(   VectorRegister v1, int64_t d2, Register x2, Register b2, int64_t ix3){emit_48(VLEG_ZOPC  | vreg(v1,  8)                        | rxmask_48(d2, x2, b2) | uimm4(ix3, 32, 48)); }
+inline void Assembler::z_vl(VectorRegister v1, const Address& a)  { z_vl(v1, a.disp(), a.indexOrR0(), a.baseOrR0()); }
 
 // Gather/Scatter
 inline void Assembler::z_vgef(   VectorRegister v1, int64_t d2, VectorRegister vx2, Register b2, int64_t ix3) {emit_48(VGEF_ZOPC  | vreg(v1,  8)                | rvmask_48(d2, vx2, b2) | uimm4(ix3, 32, 48)); }
@@ -811,7 +812,7 @@ inline void Assembler::z_vlgvh(  Register r1, VectorRegister v3, int64_t d2, Reg
 inline void Assembler::z_vlgvf(  Register r1, VectorRegister v3, int64_t d2, Register b2)             {z_vlgv(r1, v3, d2, b2, VRET_FW); }   // load FW   from VR element (index d2(b2)) into GR (logical)
 inline void Assembler::z_vlgvg(  Register r1, VectorRegister v3, int64_t d2, Register b2)             {z_vlgv(r1, v3, d2, b2, VRET_DW); }   // load DW   from VR element (index d2(b2)) into GR.
 
-inline void Assembler::z_vlvg(   VectorRegister v1, Register r3, int64_t d2, Register b2, int64_t m4) {emit_48(VLVG_ZOPC  | vreg(v1,  8)     |  reg(r3, 12, 48) | rsmask_48(d2,     b2) | vesc_mask(m4, VRET_BYTE, VRET_DW, 32)); }
+inline void Assembler::z_vlvg(   VectorRegister v1, Register r3, int64_t d2, Register b2, int64_t m4) {emit_48(VLVG_ZOPC  | vreg(v1,  8)     |  reg(r3, 12, 48) | rsmaskt_32(d2,     b2) | vesc_mask(m4, VRET_BYTE, VRET_DW, 32)); }
 inline void Assembler::z_vlvgb(  VectorRegister v1, Register r3, int64_t d2, Register b2)             {z_vlvg(v1, r3, d2, b2, VRET_BYTE); }
 inline void Assembler::z_vlvgh(  VectorRegister v1, Register r3, int64_t d2, Register b2)             {z_vlvg(v1, r3, d2, b2, VRET_HW); }
 inline void Assembler::z_vlvgf(  VectorRegister v1, Register r3, int64_t d2, Register b2)             {z_vlvg(v1, r3, d2, b2, VRET_FW); }
@@ -907,6 +908,7 @@ inline void Assembler::z_vsteh(  VectorRegister v1, int64_t d2, Register x2, Reg
 inline void Assembler::z_vstef(  VectorRegister v1, int64_t d2, Register x2, Register b2, int64_t ix3){emit_48(VSTEF_ZOPC | vreg(v1,  8)                        | rxmask_48(d2, x2, b2) | uimm4(ix3, 32, 48)); }
 inline void Assembler::z_vsteg(  VectorRegister v1, int64_t d2, Register x2, Register b2, int64_t ix3){emit_48(VSTEG_ZOPC | vreg(v1,  8)                        | rxmask_48(d2, x2, b2) | uimm4(ix3, 32, 48)); }
 inline void Assembler::z_vstl(   VectorRegister v1, Register r3, int64_t d2, Register b2)             {emit_48(VSTL_ZOPC  | vreg(v1,  8)     |  reg(r3, 12, 48) | rsmask_48(d2,     b2)); }
+inline void Assembler::z_vst(VectorRegister v1, const Address& a)  { z_vst(v1, a.disp(), a.indexOrR0(), a.baseOrR0()); }
 
 // Misc
 inline void Assembler::z_vgm(    VectorRegister v1, int64_t imm2, int64_t imm3, int64_t m4)           {emit_48(VGM_ZOPC   | vreg(v1,  8)     | uimm8( imm2, 16, 48) | uimm8(imm3, 24, 48) | vesc_mask(m4, VRET_BYTE, VRET_DW, 32)); }
@@ -946,6 +948,10 @@ inline void Assembler::z_vacch(  VectorRegister v1, VectorRegister v2, VectorReg
 inline void Assembler::z_vaccf(  VectorRegister v1, VectorRegister v2, VectorRegister v3)             {z_vacc(v1, v2, v3, VRET_FW); }      // vector element type 'F'
 inline void Assembler::z_vaccg(  VectorRegister v1, VectorRegister v2, VectorRegister v3)             {z_vacc(v1, v2, v3, VRET_DW); }      // vector element type 'G'
 inline void Assembler::z_vaccq(  VectorRegister v1, VectorRegister v2, VectorRegister v3)             {z_vacc(v1, v2, v3, VRET_QW); }      // vector element type 'Q'
+                                                                                                                                           //
+inline void Assembler::z_vfa(  VectorRegister v1, VectorRegister v2, VectorRegister v3, int64_t m4)   {emit_48(VFA_ZOPC   | vreg(v1,  8) | vreg(v2, 12) | vreg(v3, 16) | vesc_mask(m4, VRET_FW, VRET_QW, 32)); }
+inline void Assembler::z_vfadb(  VectorRegister v1, VectorRegister v2, VectorRegister v3)             {z_vfa(v1, v2, v3, VRET_DW); }         // vector element type 'G'
+
 
 // SUB
 inline void Assembler::z_vs(     VectorRegister v1, VectorRegister v2, VectorRegister v3, int64_t m4) {emit_48(VS_ZOPC    | vreg(v1,  8) | vreg(v2, 12) | vreg(v3, 16) | vesc_mask(m4, VRET_BYTE, VRET_QW, 32)); }
@@ -1025,6 +1031,9 @@ inline void Assembler::z_vx(     VectorRegister v1, VectorRegister v2, VectorReg
 
 // NOR
 inline void Assembler::z_vno(    VectorRegister v1, VectorRegister v2, VectorRegister v3)             {emit_48(VNO_ZOPC   | vreg(v1,  8) | vreg(v2, 12) | vreg(v3, 16)); }
+
+//NOT-XOR
+inline void Assembler::z_vnx(    VectorRegister v1, VectorRegister v2, VectorRegister v3)             {emit_48(VNX_ZOPC   | vreg(v1,  8) | vreg(v2, 12) | vreg(v3, 16)); }
 
 // OR
 inline void Assembler::z_vo(     VectorRegister v1, VectorRegister v2, VectorRegister v3)             {emit_48(VO_ZOPC    | vreg(v1,  8) | vreg(v2, 12) | vreg(v3, 16)); }
@@ -1178,7 +1187,6 @@ inline void Assembler::z_vistrf( VectorRegister v1, VectorRegister v2,          
 inline void Assembler::z_vistrbs(VectorRegister v1, VectorRegister v2)                            {z_vistr(v1, v2, VRET_BYTE, VOPRC_CCSET); }
 inline void Assembler::z_vistrhs(VectorRegister v1, VectorRegister v2)                            {z_vistr(v1, v2, VRET_HW,   VOPRC_CCSET); }
 inline void Assembler::z_vistrfs(VectorRegister v1, VectorRegister v2)                            {z_vistr(v1, v2, VRET_FW,   VOPRC_CCSET); }
-
 
 //-------------------------------
 // FLOAT INSTRUCTIONS

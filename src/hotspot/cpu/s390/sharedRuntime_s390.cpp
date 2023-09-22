@@ -983,7 +983,7 @@ static void gen_special_dispatch(MacroAssembler *masm,
 // 8 bytes registers are saved by default on z/Architecture.
 bool SharedRuntime::is_wide_vector(int size) {
   // Note, MaxVectorSize == 8 on this platform.
-  assert(size <= 8, "%d bytes vectors are not supported", size);
+  assert(size <= 16, "%d bytes vectors are not supported", size);
   return size > 8;
 }
 

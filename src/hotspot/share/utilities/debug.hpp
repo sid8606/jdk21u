@@ -39,7 +39,7 @@ class oopDesc;
 #if defined(LINUX) && !defined(ZERO)
 #define CAN_SHOW_REGISTERS_ON_ASSERT
 extern char* g_assert_poison;
-#define TOUCH_ASSERT_POISON (*g_assert_poison) = 'X';
+#define TOUCH_ASSERT_POISON
 void initialize_assert_poison();
 void disarm_assert_poison();
 bool handle_assert_poison_fault(const void* ucVoid, const void* faulting_address);

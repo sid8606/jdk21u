@@ -65,11 +65,13 @@ class RegisterSaver {
     int_reg           = 0,
     float_reg         = 1,
     excluded_reg      = 2,  // Not saved/restored.
+    //vs_reg	      = 3,
   } RegisterType;
 
   typedef enum {
     reg_size          = 8,
     half_reg_size     = reg_size / 2,
+    //vs_reg_size       = 16,
   } RegisterConstants;
 
   // Remember type, number, and VMReg.

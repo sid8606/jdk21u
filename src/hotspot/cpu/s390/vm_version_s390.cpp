@@ -97,7 +97,11 @@ void VM_Version::initialize() {
   intx cache_line_size = Dcache_lineSize(0);
 
 #ifdef COMPILER2
-  MaxVectorSize = 8;
+  if (FLAG_IS_DEFAULT(SuperwordUseVSX)) {
+      FLAG_SET_ERGO(SuperwordUseVSX, true);
+  }
+
+  MaxVectorSize = 16;
 #endif
 
   if (has_PrefetchRaw()) {
